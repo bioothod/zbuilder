@@ -1,0 +1,46 @@
+{
+	
+	"deb-images": ["ubunty:precise", "ubunty:trusty", "debian:wheezy"],
+	"rpm-images": ["openshift/base-centos7"],
+	"packages": {
+		"deb": {
+			"sources": {
+				"eblob": {
+					"type":	"git",
+					"repository": "http://github.com/reverbrain/eblob.git",
+					"branch": "master",
+					"include-images": ["debian:jessie", "bedf7bc60806"]
+				},
+				"elliptics": {
+					"type":	"git",
+					"repository": "http://github.com/reverbrain/elliptics.git",
+					"branch": "master",
+					"exclude-images": ["ubuntu:precise"],
+					"include-images": ["debian:jessie"]
+				}
+			},
+
+			"pre-build-commands": [
+				"conf.d/deb_reverbrain_repo_setup.sh",
+				"conf.d/deb_pre_build.sh"
+			],
+
+			"build-commands": [
+				"conf.d/deb_build.sh"
+			],
+
+			"post-build-commands": {
+				"always": [
+					"echo \"Completed\""
+				],
+				"success": [
+					"echo \"Success\"",
+					"conf.d/deb_copy_to_reverbrain.sh"
+				],
+				"fail": [
+					"echo \"Fail\""
+				]
+			}
+		}
+	}
+}
